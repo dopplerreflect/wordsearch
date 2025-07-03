@@ -41,7 +41,7 @@
       <ul>
         {#each currentWords as word}
           <li
-            class:found={foundWords.has(word)}
+            class:found={foundWords.has(word.replace(/[^A-Za-z0-9]/,'').toUpperCase())}
             onmouseenter={() => handleMouseEnter(word)}
             onmouseleave={handleMouseLeave}
           >

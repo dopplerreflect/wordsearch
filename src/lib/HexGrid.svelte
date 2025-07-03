@@ -103,7 +103,7 @@
       (highlightAll && allPlacedHexes.has(`${hex.q},${hex.r},${hex.s}`)) ||
       (hoveredWord &&
         wordPlacementData.get(hoveredWord)?.some((h) => h.q === hex.q && h.r === hex.r && h.s === hex.s))}
-    {@const wordForHex = Array.from(wordPlacementData.entries()).find(([, hexes]) => hexes.some(h => h.q === hex.q && h.r === hex.r && h.s === hex.s))?.[0].replace(/[^A-Za-z0-9]/g, '')}
+    {@const wordForHex = Array.from(wordPlacementData.entries()).find(([, hexes]) => hexes.some(h => h.q === hex.q && h.r === hex.r && h.s === hex.s))?.[0].replace(/[^A-Za-z0-9]/g, '').toUpperCase()}
     {@const isFound = wordForHex && foundWords.has(wordForHex)}
     <g>
       <polygon
