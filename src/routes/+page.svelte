@@ -6,12 +6,11 @@
   import { getWordLists} from "$lib/words/index";
   
   const wordLists = getWordLists();
-  console.log({wordLists})
   
   let selectedWordList = $state(wordLists[0].name);
 
   let currentWords = $derived(wordLists.find((wordList) => wordList.name === selectedWordList)?.words);
-  $inspect({currentWords})
+
   const rows = 23;
   const cols = 20;
   let { hexGridData, wordPlacementData } = $derived(placeWords(currentWords, rows, cols));
