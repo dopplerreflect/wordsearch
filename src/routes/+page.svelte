@@ -26,8 +26,7 @@
 
   let foundWords = $state(new SvelteSet<string>([]));
 
-  function handleWordFound(event: CustomEvent<string>) {
-    const foundWord = event.detail;
+  function handleWordFound(foundWord: string) {
     console.log({foundWord})
     const originalWord = currentWords.find(w => w.replace(/[^a-zA-Z0-9]/g, '').toUpperCase() === foundWord);
     if (originalWord) {
@@ -55,7 +54,7 @@
   </div>
 
   <div class="center-panel">
-    <HexGrid {hexGridData} {wordPlacementData} {hoveredWord} {rows} {highlightAll} {foundWords} on:wordFound={handleWordFound} />
+    <HexGrid {hexGridData} {wordPlacementData} {hoveredWord} {rows} {highlightAll} {foundWords} onWordFound={handleWordFound} />
   </div>
 
   <div class="right-panel">

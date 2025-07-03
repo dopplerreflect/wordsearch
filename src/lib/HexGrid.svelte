@@ -1,6 +1,5 @@
 <script lang="ts">
   import { SvelteSet } from 'svelte/reactivity';
-  import { createEventDispatcher } from 'svelte';
   import type { Hex, HexagonLayout, Point } from './hexUtils'; // Group all types
   import { hexToPixel, getHexVertices, pointy_top } from './hexUtils'; // Group all values
   import type { HexGridData, WordPlacementData } from './wordPlacement';
@@ -12,11 +11,10 @@
     rows: number;
     highlightAll: boolean;
     foundWords: Set<string>;
+    onWordFound: Function;
   }
-  let { hexGridData, wordPlacementData, hoveredWord = null, rows, highlightAll, foundWords }: Props = $props();
-
-  const dispatch = createEventDispatcher();
-
+  let { hexGridData, wordPlacementData, hoveredWord = null, rows, highlightAll, foundWords, onWordFound }: Props = $props();
+  
   const hexRadius = 800 / (20.5 * Math.sqrt(3) / 1);
   const gridHeight = (rows - 1) * hexRadius * 1.5 + hexRadius * Math.sqrt(3);
   const layout: HexagonLayout = {
@@ -62,7 +60,8 @@
       if (wordPlacementData.has(word)) {
         // Word found, add all hexes in the line to selectedHexes
         line.forEach(h => selectedHexes.add(h));
-        dispatch('wordFound', word);
+        // dispatch('wordFound', word);
+        onWordFound && onWordFound(word);
         // Clear selection for next word
         selectedHexes.clear();
       }
