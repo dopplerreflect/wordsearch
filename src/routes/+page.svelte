@@ -17,7 +17,7 @@
   let highlightAll: boolean = $state(false);
 
   function handleMouseEnter(word: string) {
-    hoveredWord = word.toUpperCase();
+    hoveredWord = word.replace(/[^A-Za-z0-9]/,'').toUpperCase();
   }
 
   function handleMouseLeave() {
@@ -25,12 +25,11 @@
   }
 
   let foundWords = $state(new SvelteSet<string>([]));
-
+  
   function handleWordFound(foundWord: string) {
-    console.log({foundWord})
     const originalWord = currentWords.find(w => w.replace(/[^a-zA-Z0-9]/g, '').toUpperCase() === foundWord);
     if (originalWord) {
-      foundWords.add(originalWord.toUpperCase());
+      foundWords.add(originalWord.replace(/[^A-Za-z0-9]/,'').toUpperCase());
     }
   }
 </script>
@@ -42,9 +41,9 @@
       <ul>
         {#each currentWords as word}
           <li
-            class:found={foundWords.has(word.toUpperCase())}
-            on:mouseenter={() => handleMouseEnter(word)}
-            on:mouseleave={handleMouseLeave}
+            class:found={foundWords.has(word)}
+            onmouseenter={() => handleMouseEnter(word)}
+            onmouseleave={handleMouseLeave}
           >
             {word}
           </li>

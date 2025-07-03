@@ -34,8 +34,11 @@ export const skydivingWords = [
   "Closing Loop",
   "Breakoff",
   "Beer Line",
-  "Mr. Bill",
+  "Caravan",
   "Cloud Clearance",
   "Twin Otter",
   "Skyvan",
+  "Now Call",
+  "Wind Sock",
+  "Three Rings",
 ];

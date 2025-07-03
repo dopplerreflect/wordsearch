@@ -83,7 +83,7 @@ export function placeWords(
           for (let i = 0; i < wordLetters.length; i++) {
             grid.set(hexToString(path[i]), wordLetters[i]);
           }
-          wordPlacements.set(word.toUpperCase(), path); // Store word placement
+          wordPlacements.set(cleanedWord.toUpperCase(), path); // Store word placement
           placed = true;
           break; // Word placed, move to next word
         }
