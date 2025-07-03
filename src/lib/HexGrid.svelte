@@ -1,13 +1,21 @@
 <script lang="ts">
+  import { SvelteSet } from 'svelte/reactivity';
+  import { createEventDispatcher } from 'svelte';
   import type { Hex, HexagonLayout, Point } from './hexUtils'; // Group all types
   import { hexToPixel, getHexVertices, pointy_top } from './hexUtils'; // Group all values
   import type { HexGridData, WordPlacementData } from './wordPlacement';
 
-  export let hexGridData: HexGridData;
-  export let wordPlacementData: WordPlacementData;
-  export let hoveredWord: string | null = null;
-  export let rows: number;
-  export let highlightAll: boolean;
+  type Props = {
+    hexGridData: HexGridData;
+    wordPlacementData: WordPlacementData;
+    hoveredWord: string | null;
+    rows: number;
+    highlightAll: boolean;
+    foundWords: Set<string>;
+  }
+  let { hexGridData, wordPlacementData, hoveredWord = null, rows, highlightAll, foundWords }: Props = $props();
+
+  const dispatch = createEventDispatcher();
 
   const hexRadius = 800 / (20.5 * Math.sqrt(3) / 1);
   const gridHeight = (rows - 1) * hexRadius * 1.5 + hexRadius * Math.sqrt(3);
@@ -16,13 +24,14 @@
     size: { x: hexRadius, y: hexRadius },
     origin: { x: 0 + hexRadius, y: (800 - gridHeight) / 2 + hexRadius}, // Adjust origin to 0, 0 with buffer to edge of hex cell
   };
-
+  let selectedHexes = $state(new SvelteSet([]));
+  
   // Create a Set of all placed hexes for efficient lookup when highlightAll is true
-  $: allPlacedHexes = new Set(
+  let allPlacedHexes = $derived(new Set(
     Array.from(wordPlacementData.values()).flatMap(wordHexes =>
       wordHexes.map(hex => `${hex.q},${hex.r},${hex.s}`)
     )
-  );
+  ));
 
   // Helper to convert string key back to Hex
   function stringToHex(s: string): Hex {
@@ -38,31 +47,84 @@
   function getHexCenter(hex: Hex): Point {
     return hexToPixel(hex, layout);
   }
+
+  function handleHexClick(hex: Hex): void {
+    selectedHexes.add(hex);
+    if (selectedHexes.size < 2) return;
+
+    const selectedArray = Array.from(selectedHexes);
+    const first = selectedArray[0];
+    const last = selectedArray[selectedArray.length - 1];
+
+    const line = getHexesBetween(first, last);
+    if (line.length > 0) {
+      const word = line.map(h => hexGridData.get(`${h.q},${h.r},${h.s}`)).join('');
+      if (wordPlacementData.has(word)) {
+        // Word found, add all hexes in the line to selectedHexes
+        line.forEach(h => selectedHexes.add(h));
+        dispatch('wordFound', word);
+        // Clear selection for next word
+        selectedHexes.clear();
+      }
+    }
+    // if the word is not found, clear the selection
+    if (selectedHexes.size > 1) {
+      selectedHexes.clear();
+    }
+  }
+
+  // Gets all hexes between two hexes, including the start and end hexes.
+  // Returns an empty array if the hexes are not on a straight line.
+  function getHexesBetween(start: Hex, end: Hex): Hex[] {
+    const distance = Math.max(Math.abs(start.q - end.q), Math.abs(start.r - end.r), Math.abs(start.s - end.s));
+    if (distance === 0) return [start];
+
+    const line: Hex[] = [];
+    for (let i = 0; i <= distance; i++) {
+      const q = Math.round(start.q + (end.q - start.q) * i / distance);
+      const r = Math.round(start.r + (end.r - start.r) * i / distance);
+      const s = -q - r;
+      line.push({ q, r, s });
+    }
+
+    // Verify that the line is straight
+    if (line.some(h => (h.q + h.r + h.s) !== 0)) {
+      return [];
+    }
+    return line;
+  }
+
 </script>
 
 <svg width="800" height="800" viewBox="0 0 800 800">
-  {#each Array.from(hexGridData.entries()) as [hexKey, letter]}
+  {#each Array.from(hexGridData.entries()) as [hexKey, letter], i}
     {@const hex = stringToHex(hexKey)}
     {@const center = getHexCenter(hex)}
-    {@const isHighlighted =
+    {@const isHighlighted = 
       (highlightAll && allPlacedHexes.has(`${hex.q},${hex.r},${hex.s}`)) ||
       (hoveredWord &&
         wordPlacementData.get(hoveredWord)?.some((h) => h.q === hex.q && h.r === hex.r && h.s === hex.s))}
+    {@const wordForHex = Array.from(wordPlacementData.entries()).find(([, hexes]) => hexes.some(h => h.q === hex.q && h.r === hex.r && h.s === hex.s))?.[0]}
+    {@const isFound = wordForHex && foundWords.has(wordForHex)}
     <g>
       <polygon
-        points="{getPoints(hex)}"
-        fill="{isHighlighted ? 'yellow' : 'white'}"
+        points={getPoints(hex)}
+        fill={isFound ? 'lightgreen' : selectedHexes.has(hex) ? 'blue' : isHighlighted ? 'yellow' : 'white'}
         stroke="lightgrey"
         stroke-width="1"
       />
       {#if letter}
         <text
-          x="{center.x}"
-          y="{center.y}"
+          tabindex={i}
+          role='button'
+          on:click={() => handleHexClick(hex)}
+          on:keypress={(event) => { if(event.key === 'Enter') handleHexClick(hex)}}
+          x={center.x}
+          y={center.y}
           text-anchor="middle"
           dominant-baseline="middle"
           font-size="20"
-          fill="{isHighlighted ? 'black' : 'black'}"
+          fill={isHighlighted ? 'black' : 'black'}
         >
           {letter}
         </text>
@@ -75,5 +137,6 @@
   svg text {
     font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
     font-weight: bold;
+    cursor: pointer;
   }
 </style>

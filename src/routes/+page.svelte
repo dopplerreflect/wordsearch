@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { SvelteSet } from 'svelte/reactivity';
   import { skydivingWords } from '$lib/words';
   import { transformersWords } from '$lib/transformers';
   import HexGrid from '$lib/HexGrid.svelte';
@@ -6,11 +7,11 @@
 
   let selectedWordList: 'skydiving' | 'transformers' = 'skydiving';
 
-  $: currentWords = selectedWordList === 'skydiving' ? skydivingWords : transformersWords;
+  let currentWords = $state(selectedWordList === 'skydiving' ? skydivingWords : transformersWords);
 
   const rows = 23;
   const cols = 20;
-  $: ({ hexGridData, wordPlacementData } = placeWords(currentWords, rows, cols));
+  let { hexGridData, wordPlacementData } = $state(placeWords(currentWords, rows, cols));
 
   let hoveredWord: string | null = null;
   let highlightAll: boolean = false;
@@ -22,6 +23,12 @@
   function handleMouseLeave() {
     hoveredWord = null;
   }
+
+  let foundWords = $state(new SvelteSet<string>([]));
+
+  function handleWordFound(event: CustomEvent<string>) {
+    foundWords.add(event.detail);
+  }
 </script>
 
 <div class="container">
@@ -31,6 +38,7 @@
       <ul>
         {#each currentWords as word}
           <li
+            class:found={foundWords.has(word.toUpperCase())}
             on:mouseenter={() => handleMouseEnter(word)}
             on:mouseleave={handleMouseLeave}
           >
@@ -42,7 +50,7 @@
   </div>
 
   <div class="center-panel">
-    <HexGrid {hexGridData} {wordPlacementData} {hoveredWord} {rows} {cols} {highlightAll} />
+    <HexGrid {hexGridData} {wordPlacementData} {hoveredWord} {rows} {highlightAll} {foundWords} on:wordFound={handleWordFound} />
   </div>
 
   <div class="right-panel">
@@ -95,6 +103,7 @@
   }
 
   .word-list h2 {
+    text-align: center;
     color: #333;
     margin-bottom: 15px;
   }
@@ -103,17 +112,23 @@
     list-style: none;
     padding: 0;
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    grid-template-columns: repeat(3, 20ch);
     gap: 10px;
   }
 
   .word-list li {
     background-color: #f0f0f0;
-    border: 1px solid #ddd;
-    padding: 8px 12px;
+    width: 20ch;
+    border: 1px solid #ccc;
+    padding: 0.25rem 0rem;
     border-radius: 4px;
     text-align: center;
     font-size: 0.9em;
+  }
+
+  .word-list li.found {
+    background-color: lightgreen;
+    text-decoration: line-through;
   }
 
   @media print {
@@ -163,7 +178,7 @@
       background-color: transparent;
       border: none;
       padding: 2px 5px;
-      font-size: 0.8em;
+      font-size: 0.8rem;
     }
 
   }
