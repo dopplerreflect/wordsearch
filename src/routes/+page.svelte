@@ -5,16 +5,16 @@
   import HexGrid from '$lib/HexGrid.svelte';
   import { placeWords, type HexGridData, type WordPlacementData } from '$lib/wordPlacement';
 
-  let selectedWordList: 'skydiving' | 'transformers' = 'skydiving';
+  let selectedWordList = $state('skydiving');
 
-  let currentWords = $state(selectedWordList === 'skydiving' ? skydivingWords : transformersWords);
+  let currentWords = $derived(selectedWordList === 'skydiving' ? skydivingWords : transformersWords);
 
   const rows = 23;
   const cols = 20;
-  let { hexGridData, wordPlacementData } = $state(placeWords(currentWords, rows, cols));
+  let { hexGridData, wordPlacementData } = $derived(placeWords(currentWords, rows, cols));
 
-  let hoveredWord: string | null = null;
-  let highlightAll: boolean = false;
+  let hoveredWord: string | null = $state(null);
+  let highlightAll: boolean = $state(false);
 
   function handleMouseEnter(word: string) {
     hoveredWord = word.toUpperCase();
@@ -27,7 +27,12 @@
   let foundWords = $state(new SvelteSet<string>([]));
 
   function handleWordFound(event: CustomEvent<string>) {
-    foundWords.add(event.detail);
+    const foundWord = event.detail;
+    console.log({foundWord})
+    const originalWord = currentWords.find(w => w.replace(/[^a-zA-Z0-9]/g, '').toUpperCase() === foundWord);
+    if (originalWord) {
+      foundWords.add(originalWord.toUpperCase());
+    }
   }
 </script>
 

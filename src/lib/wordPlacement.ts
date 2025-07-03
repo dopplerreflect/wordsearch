@@ -32,7 +32,11 @@ function getNeighbor(hex: Hex, directionIndex: number): Hex {
   return addHex(hex, directions[directionIndex]);
 }
 
-export function placeWords(words: string[], rows: number, cols: number): { hexGridData: HexGridData; wordPlacementData: WordPlacementData } {
+export function placeWords(
+  words: string[],
+  rows: number,
+  cols: number,
+): { hexGridData: HexGridData; wordPlacementData: WordPlacementData } {
   const grid: HexGridData = new Map();
   const wordPlacements: WordPlacementData = new Map();
   const allHexes = generateHexGrid(rows, cols);
@@ -44,8 +48,8 @@ export function placeWords(words: string[], rows: number, cols: number): { hexGr
   words.sort(() => Math.random() - 0.5);
 
   for (const word of words) {
-    const cleanedWord = word.replace(/[^a-zA-Z0-9]/g, ''); // Strip non-alphanumeric characters
-    const wordLetters = cleanedWord.toUpperCase().split('');
+    const cleanedWord = word.replace(/[^a-zA-Z0-9]/g, ""); // Strip non-alphanumeric characters
+    const wordLetters = cleanedWord.toUpperCase().split("");
     let placed = false;
 
     // Try to place the word at random positions and directions
