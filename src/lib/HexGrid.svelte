@@ -116,8 +116,8 @@
         <text
           tabindex={i}
           role='button'
-          on:click={() => handleHexClick(hex)}
-          on:keypress={(event) => { if(event.key === 'Enter') handleHexClick(hex)}}
+          onclick={() => handleHexClick(hex)}
+          onkeypress={(event) => { if(event.key === 'Enter') handleHexClick(hex)}}
           x={center.x}
           y={center.y}
           text-anchor="middle"
