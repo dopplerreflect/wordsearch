@@ -1,14 +1,17 @@
 <script lang="ts">
   import { SvelteSet } from 'svelte/reactivity';
-  import { skydivingWords } from '$lib/words';
-  import { transformersWords } from '$lib/transformers';
   import HexGrid from '$lib/HexGrid.svelte';
   import { placeWords, type HexGridData, type WordPlacementData } from '$lib/wordPlacement';
 
-  let selectedWordList = $state('skydiving');
+  import { getWordLists} from "$lib/words/index";
+  
+  const wordLists = getWordLists();
+  console.log({wordLists})
+  
+  let selectedWordList = $state(wordLists[0].name);
 
-  let currentWords = $derived(selectedWordList === 'skydiving' ? skydivingWords : transformersWords);
-
+  let currentWords = $derived(wordLists.find((wordList) => wordList.name === selectedWordList)?.words);
+  $inspect({currentWords})
   const rows = 23;
   const cols = 20;
   let { hexGridData, wordPlacementData } = $derived(placeWords(currentWords, rows, cols));
@@ -32,12 +35,16 @@
       foundWords.add(originalWord.replace(/[^A-Za-z0-9]/,'').toUpperCase());
     }
   }
+
+  function clearFoundWords() {
+    foundWords.clear();
+  }
 </script>
 
 <div class="container">
   <div class="left-panel">
     <div class="word-list">
-      <h2>{selectedWordList === 'skydiving' ? 'Skydiving Words' : 'Transformers Words'}</h2>
+      <h2>{selectedWordList} Words</h2>
       <ul>
         {#each currentWords as word}
           <li
@@ -58,15 +65,15 @@
 
   <div class="right-panel">
     <div class="controls">
-      <label>
-        <input type="radio" name="wordList" value="skydiving" bind:group={selectedWordList} /> Skydiving Words
-      </label>
-      <label>
-        <input type="radio" name="wordList" value="transformers" bind:group={selectedWordList} /> Transformers Words
-      </label>
+      {#each wordLists as wordList}
+        <label>
+          <input type="radio" name="wordList" value={wordList.name} bind:group={selectedWordList} /> {wordList.name} Words
+        </label>
+      {/each}
       <label>
         <input type="checkbox" bind:checked={highlightAll} /> Highlight All Words
       </label>
+      <button onclick={clearFoundWords}>Clear Found Words</button>
     </div>
   </div>
 </div>
