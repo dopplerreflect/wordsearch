@@ -15,12 +15,14 @@
   }
   let { hexGridData, wordPlacementData, hoveredWord = null, rows, highlightAll, foundWords, onWordFound }: Props = $props();
   
-  const hexRadius = 800 / (20.5 * Math.sqrt(3) / 1);
-  const gridHeight = (rows - 1) * hexRadius * 1.5 + hexRadius * Math.sqrt(3);
+  const inch = 96;
+  const gridWidth = 7 * inch;
+  const hexRadius = gridWidth / (20.5 * Math.sqrt(3) / 1);
+  const gridHeight = (rows + 0 ) * hexRadius * 1.5 + hexRadius * Math.sqrt(3);
   const layout: HexagonLayout = {
     orientation: pointy_top,
     size: { x: hexRadius, y: hexRadius },
-    origin: { x: 0 + hexRadius, y: (800 - gridHeight) / 2 + hexRadius}, // Adjust origin to 0, 0 with buffer to edge of hex cell
+    origin: { x: 0 + hexRadius, y: (gridWidth - gridHeight) / 2 + hexRadius * Math.sqrt(3)}, // Adjust origin to 0, 0 with buffer to edge of hex cell
   };
   let selectedHexes = $state(new SvelteSet([]));
   
@@ -95,7 +97,7 @@
 
 </script>
 
-<svg width="800" height="800" viewBox="0 0 800 800">
+<svg width={gridWidth} height={gridHeight} viewBox={`0 0 ${gridWidth} ${gridHeight}`}>
   {#each Array.from(hexGridData.entries()) as [hexKey, letter], i}
     {@const hex = stringToHex(hexKey)}
     {@const center = getHexCenter(hex)}
