@@ -17,7 +17,7 @@
   
   const inch = 96;
   const gridWidth = 7 * inch;
-  const hexRadius = gridWidth / (20.5 * Math.sqrt(3) / 1);
+  const hexRadius = gridWidth / (20.75 * Math.sqrt(3) );
   const gridHeight = (rows + 0 ) * hexRadius * 1.5 + hexRadius * Math.sqrt(3);
   const layout: HexagonLayout = {
     orientation: pointy_top,
@@ -111,7 +111,7 @@
       <polygon
         points={getPoints(hex)}
         fill={isFound ? 'lightgreen' : selectedHexes.has(hex) ? 'blue' : isHighlighted ? 'yellow' : 'white'}
-        stroke="lightgrey"
+        stroke="#888"
         stroke-width="1"
       />
       {#if letter}

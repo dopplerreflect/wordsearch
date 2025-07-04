@@ -143,17 +143,20 @@
   @media print {
     .container {
       display: block;
-      width: 7.5in; /* Approximately 720px at 96dpi, leaving 0.5in margins on 8.5in page */
-      margin: 0.5in auto; /* Center with 0.5 inch top/bottom margins */
+      width: 7.0in; 
+      margin: 0.75in auto; 
       padding: 0;
       box-sizing: border-box;
     }
 
-    .left-panel,
-    .right-panel {
+    .left-panel {
       flex: none;
       width: auto;
       padding: 0;
+    }
+
+    .right-panel {
+      display: none;
     }
 
     .center-panel {
@@ -172,8 +175,11 @@
     }
 
     .word-list h2 {
+      border-bottom: 1px solid black;
       text-align: center;
       margin-bottom: 5px;
+      margin-top: 0;
+      padding-top: 0;
     }
 
     .word-list ul {
@@ -184,11 +190,16 @@
     }
 
     .word-list li {
+      width: auto;
+      display: inline;
       background-color: transparent;
       border: none;
-      padding: 2px 5px;
+      padding: 0px 5px;
       font-size: 0.8rem;
     }
 
+    select {
+      display: none;
+    }
   }
 </style>
