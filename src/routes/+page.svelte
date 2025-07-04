@@ -42,6 +42,11 @@
 
 <div class="container">
   <div class="left-panel">
+      <select bind:value={selectedWordList}>
+        {#each wordLists as wordList}
+          <option value={wordList.name}>{wordList.name}</option>
+        {/each}
+      </select>
     <div class="word-list">
       <h2>{selectedWordList} Words</h2>
       <ul>
@@ -64,11 +69,6 @@
 
   <div class="right-panel">
     <div class="controls">
-      {#each wordLists as wordList}
-        <label>
-          <input type="radio" name="wordList" value={wordList.name} bind:group={selectedWordList} /> {wordList.name} Words
-        </label>
-      {/each}
       <label>
         <input type="checkbox" bind:checked={highlightAll} /> Highlight All Words
       </label>
