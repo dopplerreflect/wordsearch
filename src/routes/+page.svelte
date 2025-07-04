@@ -42,11 +42,6 @@
 
 <div class="container">
   <div class="left-panel">
-      <select bind:value={selectedWordList}>
-        {#each wordLists as wordList}
-          <option value={wordList.name}>{wordList.name}</option>
-        {/each}
-      </select>
     <div class="word-list">
       <h2>{selectedWordList} Words</h2>
       <ul>
@@ -60,6 +55,14 @@
           </li>
         {/each}
       </ul>
+    </div>
+    <div class="controls">
+      Word list: 
+      <select bind:value={selectedWordList} onchange={clearFoundWords}>
+        {#each wordLists as wordList}
+          <option value={wordList.name}>{wordList.name}</option>
+        {/each}
+      </select>
     </div>
   </div>
 
@@ -92,11 +95,12 @@
   .center-panel {
     flex: 2;
     display: flex;
-    justify-content: center;
+    justify-content: start;
     align-items: center;
   }
 
   .right-panel {
+    display: none;
     flex: 1;
     padding-left: 20px;
   }
@@ -130,7 +134,7 @@
     width: 20ch;
     border: 1px solid var(--light);
     padding: 0.25rem 0rem;
-    border-radius: 4px;
+    border-radius: 0.25em;
     text-align: center;
     font-size: 0.9em;
   }
@@ -141,6 +145,13 @@
     text-decoration: line-through;
   }
 
+  select {
+    background-color: var(--medium);
+    border: 1px solid var(--light);
+    border-radius: 0.25em; 
+    color: var(--light);
+    padding: 0.25em 1em;
+  }
   @media print {
     .container {
       display: block;

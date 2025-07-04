@@ -14,6 +14,7 @@
       --blue: oklch(0.75 100% 210);
     }
     body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
       background-color: var(--dark);
       color: var(--light);
     }
