@@ -1,4 +1,7 @@
-const wordModules = import.meta.glob("./*.json", { eager: true });
+const wordModules: Record<string, { default: string[] }> = import.meta.glob(
+  "./*.json",
+  { eager: true },
+);
 
 export function getWordLists() {
   return Object.entries(wordModules).map(([path, module]) => ({
