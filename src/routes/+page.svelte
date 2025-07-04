@@ -112,8 +112,8 @@
   }
 
   .word-list h2 {
+    color: var(--light);
     text-align: center;
-    color: #333;
     margin-bottom: 15px;
   }
 
@@ -126,9 +126,9 @@
   }
 
   .word-list li {
-    background-color: #f0f0f0;
+    background-color: var(--medium);
     width: 20ch;
-    border: 1px solid #ccc;
+    border: 1px solid var(--light);
     padding: 0.25rem 0rem;
     border-radius: 4px;
     text-align: center;
@@ -136,7 +136,8 @@
   }
 
   .word-list li.found {
-    background-color: lightgreen;
+    background-color: var(--green);
+    color: var(--dark);
     text-decoration: line-through;
   }
 

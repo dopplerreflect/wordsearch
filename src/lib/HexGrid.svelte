@@ -110,8 +110,8 @@
     <g>
       <polygon
         points={getPoints(hex)}
-        fill={isFound ? 'lightgreen' : selectedHexes.has(hex) ? 'blue' : isHighlighted ? 'yellow' : 'white'}
-        stroke="#888"
+        fill={isFound ? 'var(--green)' : selectedHexes.has(hex) ? 'var(--blue)' : isHighlighted ? 'yellow' : 'var(--light)'}
+        stroke="var(--medium)"
         stroke-width="1"
       />
       {#if letter}
@@ -125,7 +125,7 @@
           text-anchor="middle"
           dominant-baseline="middle"
           font-size="20"
-          fill={isHighlighted ? 'black' : 'black'}
+          fill="var(--dark)"
         >
           {letter}
         </text>
