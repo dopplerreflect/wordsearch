@@ -3,8 +3,6 @@ import { vitePreprocess } from '@sveltejs/vite-plugin-svelte';
 
 /** @type {import('@sveltejs/kit').Config} */
 
-const dev = process.argv.includes('dev');
-
 const config = {
 	// Consult https://svelte.dev/docs/kit/integrations
 	// for more information about preprocessors
@@ -17,11 +15,11 @@ const config = {
 		adapter: adapter({
 			pages: 'docs',
 			assets: 'docs',
-			fallback: null,
+			fallback: '404.html',
 			precompress: false
 		}),
 		paths: {
-			base: dev ? '' : '/wordsearch',
+			base: '/wordsearch',
 			relative: false
 		}
 	}
