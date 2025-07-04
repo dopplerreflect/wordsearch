@@ -13,3 +13,4 @@ When making changes in this project, please follow the Jujutsu-based workflow de
     ```bash
     jj new
     ```
+To create a new word list, create a list of 42 words related to the requested subject and format it as a json array. Store it in @src/lib/words/Subject.json. Make sure that the first letter of each word is captalized.
