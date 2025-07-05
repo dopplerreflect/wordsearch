@@ -252,7 +252,18 @@
       box-sizing: border-box;
     }
 
+    .mobile-nav-header {
+      display: none;
+    }
+
+    .panel-wrapper {
+      display: block;
+      width: auto;
+      transform: none !important;
+    }
+
     .left-panel {
+      display: block;
       flex: none;
       width: auto;
       padding: 0;
