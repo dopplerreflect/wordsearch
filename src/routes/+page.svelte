@@ -257,7 +257,7 @@
       display: none;
     }
 
-    .panel-wrapper {
+    .panel-track {
       display: block;
       width: auto;
       transform: none !important;
@@ -290,6 +290,7 @@
     }
 
     .word-list h2 {
+      color: black;
       border-bottom: 1px solid black;
       text-align: center;
       margin-bottom: 5px;
