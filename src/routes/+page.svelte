@@ -9,10 +9,10 @@
   
   let selectedWordList = $state(wordLists[0].name);
 
-  let currentWords = $derived(wordLists.find((wordList) => wordList.name === selectedWordList)?.words);
+  let currentWords = $derived(wordLists.find((wordList) => wordList.name === selectedWordList)?.words.sort((a, b) => 0.5 * Math.random()).slice(0, 24) || []);
 
-  const cols = 20;
-  const rows = 23;
+  const cols = 15;
+  const rows = 20;
   let { hexGridData, wordPlacementData } = $derived(placeWords(currentWords, rows, cols));
 
   let hoveredWord: string | null = $state(null);
@@ -83,7 +83,7 @@
         </div>
       </div>
       <div class="center-panel">
-        <HexGrid {hexGridData} {wordPlacementData} {hoveredWord} {rows} {highlightAll} {foundWords} onWordFound={handleWordFound} />
+        <HexGrid {hexGridData} {wordPlacementData} {hoveredWord} {cols} {rows} {highlightAll} {foundWords} onWordFound={handleWordFound} />
       </div>
     </div>
 
@@ -246,9 +246,10 @@
 
   @media print {
     .container {
+      border: 1px solid black;
       display: block;
       width: 7.0in; 
-      margin: 0.75in auto; 
+      margin: 0.75in; 
       padding: 0;
       box-sizing: border-box;
     }
@@ -279,7 +280,9 @@
       width: auto;
       display: block;
     }
-
+    .center-panel svg {
+      height: 50%;
+    }
     .controls {
       display: none;
     }

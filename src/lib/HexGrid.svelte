@@ -8,21 +8,22 @@
     hexGridData: HexGridData;
     wordPlacementData: WordPlacementData;
     hoveredWord: string | null;
+    cols: number;
     rows: number;
     highlightAll: boolean;
     foundWords: Set<string>;
     onWordFound: Function;
   }
-  let { hexGridData, wordPlacementData, hoveredWord = null, rows, highlightAll, foundWords, onWordFound }: Props = $props();
+  let { hexGridData, wordPlacementData, hoveredWord = null, cols, rows, highlightAll, foundWords, onWordFound }: Props = $props();
   
   const inch = 96;
   const gridWidth = 7 * inch;
-  const hexRadius = gridWidth / (20.75 * Math.sqrt(3) );
+  const hexRadius = gridWidth / ((cols + 0.75) * Math.sqrt(3) );
   const gridHeight = (rows + 0 ) * hexRadius * 1.5 + hexRadius * Math.sqrt(3);
   const layout: HexagonLayout = {
     orientation: pointy_top,
     size: { x: hexRadius, y: hexRadius },
-    origin: { x: 0 + hexRadius, y: (gridWidth - gridHeight) / 2 + hexRadius * Math.sqrt(3)}, // Adjust origin to 0, 0 with buffer to edge of hex cell
+    origin: { x: 0 + hexRadius, y: 0 + hexRadius }, // Adjust origin to 0, 0 with buffer to edge of hex cell
   };
   let selectedHexes = $state(new SvelteSet([]));
   
@@ -124,7 +125,7 @@
           y={center.y}
           text-anchor="middle"
           dominant-baseline="middle"
-          font-size="20"
+          font-size={Math.floor(hexRadius * 1.25)}
           fill="var(--dark)"
         >
           {letter}
