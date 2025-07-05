@@ -11,8 +11,8 @@
 
   let currentWords = $derived(wordLists.find((wordList) => wordList.name === selectedWordList)?.words);
 
-  const rows = 23;
   const cols = 20;
+  const rows = 23;
   let { hexGridData, wordPlacementData } = $derived(placeWords(currentWords, rows, cols));
 
   let hoveredWord: string | null = $state(null);
@@ -56,43 +56,44 @@
     <button class:active={activePanel === 'hexgrid'} onclick={showHexGrid}>Puzzle</button>
   </div>
 
-  <div class="panel-wrapper" class:show-wordlist={activePanel === 'wordlist'} class:show-hexgrid={activePanel === 'hexgrid'}>
-    <div class="left-panel">
-      <div class="word-list">
-        <h2>{selectedWordList} Words</h2>
-        <ul>
-          {#each currentWords as word}
-            <li
-              class:found={foundWords.has(word.replace(/[^A-Za-z0-9]/,'').toUpperCase())}
-              onmouseenter={() => handleMouseEnter(word)}
-              onmouseleave={handleMouseLeave}
-            >
-              {word}
-            </li>
-          {/each}
-        </ul>
+  <div class="panel-wrapper">
+    <div class="panel-track" class:show-wordlist={activePanel === 'wordlist'} class:show-hexgrid={activePanel === 'hexgrid'}>
+      <div class="left-panel">
+        <div class="word-list">
+          <h2>{selectedWordList} Words</h2>
+          <ul>
+            {#each currentWords as word}
+              <li
+                class:found={foundWords.has(word.replace(/[^A-Za-z0-9]/,'').toUpperCase())}
+                onmouseenter={() => handleMouseEnter(word)}
+                onmouseleave={handleMouseLeave}
+              >
+                {word}
+              </li>
+            {/each}
+          </ul>
+        </div>
+        <div class="controls">
+          Word list: 
+          <select bind:value={selectedWordList} onchange={clearFoundWords}>
+            {#each wordLists as wordList}
+              <option value={wordList.name}>{wordList.name}</option>
+            {/each}
+          </select>
+        </div>
       </div>
+      <div class="center-panel">
+        <HexGrid {hexGridData} {wordPlacementData} {hoveredWord} {rows} {highlightAll} {foundWords} onWordFound={handleWordFound} />
+      </div>
+    </div>
+
+    <div class="right-panel">
       <div class="controls">
-        Word list: 
-        <select bind:value={selectedWordList} onchange={clearFoundWords}>
-          {#each wordLists as wordList}
-            <option value={wordList.name}>{wordList.name}</option>
-          {/each}
-        </select>
+        <label>
+          <input type="checkbox" bind:checked={highlightAll} /> Highlight All Words
+        </label>
+        <button onclick={clearFoundWords}>Clear Found Words</button>
       </div>
-    </div>
-
-    <div class="center-panel">
-      <HexGrid {hexGridData} {wordPlacementData} {hoveredWord} {rows} {highlightAll} {foundWords} onWordFound={handleWordFound} />
-    </div>
-  </div>
-
-  <div class="right-panel">
-    <div class="controls">
-      <label>
-        <input type="checkbox" bind:checked={highlightAll} /> Highlight All Words
-      </label>
-      <button onclick={clearFoundWords}>Clear Found Words</button>
     </div>
   </div>
 </div>
@@ -101,14 +102,13 @@
   .container {
     display: flex;
     justify-content: space-around;
-    padding: 1em;
   }
 
   .mobile-nav-header {
     display: none; /* Hidden by default, shown on mobile */
   }
 
-  .panel-wrapper {
+  .panel-track {
     display: flex;
   }
 
@@ -119,19 +119,17 @@
   .center-panel {
     flex: 2;
     display: flex;
-    justify-content: start;
+    justify-content: center;
     align-items: center;
   }
 
   .right-panel {
     flex: 1;
-    padding-left: 20px;
     display: none; /* only used for debugging. leave it none. */
   }
 
   .controls label {
     display: block;
-    margin-bottom: 10px;
   }
 
   .word-list {
@@ -141,7 +139,6 @@
   .word-list h2 {
     color: var(--light);
     text-align: center;
-    margin-bottom: 15px;
   }
 
   .word-list ul {
@@ -156,7 +153,6 @@
     background-color: var(--medium);
     width: 20ch;
     border: 1px solid var(--light);
-    padding: 0.25em 0em;
     border-radius: 0.25em;
     text-align: center;
     font-size: 0.9em;
@@ -179,6 +175,7 @@
   /* Responsive adjustments for smaller screens */
   @media (max-width: 768px) {
     .container {
+      display: flex;
       flex-direction: column; /* Stack panels vertically */
       padding: 0; /* Remove horizontal padding from container */
       width: 100vw; /* Ensure container takes full viewport width */
@@ -191,7 +188,6 @@
       width: 100%;
       justify-content: center;
       gap: 10px;
-      padding-bottom: 10px;
       position: sticky; /* Keep header at the top */
       top: 0;
       background-color: var(--dark); /* Ensure header is visible */
@@ -214,29 +210,34 @@
     }
 
     .panel-wrapper {
-      width: 200vw; /* Two panels side-by-side */
-      transition: transform 0.3s ease-in-out; /* Smooth sliding transition */
+      width: 100vw; /* Two panels side-by-side */
+      overflow: hidden;
+      position: relative;
     }
 
-    .panel-wrapper.show-wordlist {
+    .panel-track {
+      box-sizing: border-box;
+      display: flex;
+      width: 200vw;
+      transition: transform 0.4s cubic-bezier(0.4,0,0.2,1);
+    }
+
+    .panel-track.show-wordlist {
       transform: translateX(0%);
     }
 
-    .panel-wrapper.show-hexgrid {
-      transform: translateX(-50%); /* Slide left to show hexgrid */
+    .panel-track.show-hexgrid {
+      transform: translateX(-100vw); /* Slide left to show hexgrid */
     }
 
     .left-panel,
     .center-panel {
       flex-shrink: 0; /* Prevent shrinking during transition */
-      width: 100vw; /* Each panel takes half the wrapper width */
+      min-width: 100vw; /* Each panel takes half the wrapper width */
       box-sizing: border-box; /* Include padding in width calculation */
     }
     .word-list ul {
       grid-template-columns: repeat(2, 20ch);
-    }
-    .word-list li {
-      
     }
     .right-panel {
       display: none; /* Hide right panel on mobile */
