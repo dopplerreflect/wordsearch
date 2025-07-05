@@ -278,7 +278,6 @@
       flex: none;
       width: auto;
       display: block;
-      text-align: center;
     }
 
     .controls {
