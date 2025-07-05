@@ -38,36 +38,53 @@
   function clearFoundWords() {
     foundWords.clear();
   }
+
+  let activePanel: 'wordlist' | 'hexgrid' = $state('wordlist');
+
+  function showWordList() {
+    activePanel = 'wordlist';
+  }
+
+  function showHexGrid() {
+    activePanel = 'hexgrid';
+  }
 </script>
 
 <div class="container">
-  <div class="left-panel">
-    <div class="word-list">
-      <h2>{selectedWordList} Words</h2>
-      <ul>
-        {#each currentWords as word}
-          <li
-            class:found={foundWords.has(word.replace(/[^A-Za-z0-9]/,'').toUpperCase())}
-            onmouseenter={() => handleMouseEnter(word)}
-            onmouseleave={handleMouseLeave}
-          >
-            {word}
-          </li>
-        {/each}
-      </ul>
-    </div>
-    <div class="controls">
-      Word list: 
-      <select bind:value={selectedWordList} onchange={clearFoundWords}>
-        {#each wordLists as wordList}
-          <option value={wordList.name}>{wordList.name}</option>
-        {/each}
-      </select>
-    </div>
+  <div class="mobile-nav-header">
+    <button class:active={activePanel === 'wordlist'} onclick={showWordList}>Words</button>
+    <button class:active={activePanel === 'hexgrid'} onclick={showHexGrid}>Puzzle</button>
   </div>
 
-  <div class="center-panel">
-    <HexGrid {hexGridData} {wordPlacementData} {hoveredWord} {rows} {highlightAll} {foundWords} onWordFound={handleWordFound} />
+  <div class="panel-wrapper" class:show-wordlist={activePanel === 'wordlist'} class:show-hexgrid={activePanel === 'hexgrid'}>
+    <div class="left-panel">
+      <div class="word-list">
+        <h2>{selectedWordList} Words</h2>
+        <ul>
+          {#each currentWords as word}
+            <li
+              class:found={foundWords.has(word.replace(/[^A-Za-z0-9]/,'').toUpperCase())}
+              onmouseenter={() => handleMouseEnter(word)}
+              onmouseleave={handleMouseLeave}
+            >
+              {word}
+            </li>
+          {/each}
+        </ul>
+      </div>
+      <div class="controls">
+        Word list: 
+        <select bind:value={selectedWordList} onchange={clearFoundWords}>
+          {#each wordLists as wordList}
+            <option value={wordList.name}>{wordList.name}</option>
+          {/each}
+        </select>
+      </div>
+    </div>
+
+    <div class="center-panel">
+      <HexGrid {hexGridData} {wordPlacementData} {hoveredWord} {rows} {highlightAll} {foundWords} onWordFound={handleWordFound} />
+    </div>
   </div>
 
   <div class="right-panel">
@@ -84,12 +101,19 @@
   .container {
     display: flex;
     justify-content: space-around;
-    padding: 20px;
+    padding: 1em;
+  }
+
+  .mobile-nav-header {
+    display: none; /* Hidden by default, shown on mobile */
+  }
+
+  .panel-wrapper {
+    display: flex;
   }
 
   .left-panel {
     flex: 1;
-    padding-right: 20px;
   }
 
   .center-panel {
@@ -100,9 +124,9 @@
   }
 
   .right-panel {
-    display: none;
     flex: 1;
     padding-left: 20px;
+    display: none; /* only used for debugging. leave it none. */
   }
 
   .controls label {
@@ -112,7 +136,6 @@
 
   .word-list {
     font-family: sans-serif;
-    padding: 20px;
   }
 
   .word-list h2 {
@@ -126,14 +149,14 @@
     padding: 0;
     display: grid;
     grid-template-columns: repeat(3, 20ch);
-    gap: 10px;
+    gap: 0.5em;
   }
 
   .word-list li {
     background-color: var(--medium);
     width: 20ch;
     border: 1px solid var(--light);
-    padding: 0.25rem 0rem;
+    padding: 0.25em 0em;
     border-radius: 0.25em;
     text-align: center;
     font-size: 0.9em;
@@ -157,32 +180,66 @@
   @media (max-width: 768px) {
     .container {
       flex-direction: column; /* Stack panels vertically */
-      padding: 10px; /* Reduce padding */
+      padding: 0; /* Remove horizontal padding from container */
+      width: 100vw; /* Ensure container takes full viewport width */
+      box-sizing: border-box; /* Include padding in width calculation */
+      overflow: hidden; /* Re-add overflow for mobile sliding */
     }
 
-    .left-panel {
-      padding-right: 0; /* Remove right padding */
-      padding-bottom: 20px; /* Add some bottom padding */
-      flex: auto; /* Allow it to take natural height */
+    .mobile-nav-header {
+      display: flex; /* Show header on mobile */
+      width: 100%;
+      justify-content: center;
+      gap: 10px;
+      padding-bottom: 10px;
+      position: sticky; /* Keep header at the top */
+      top: 0;
+      background-color: var(--dark); /* Ensure header is visible */
+      z-index: 100; /* Ensure header is above other content */
     }
 
+    .mobile-nav-header button {
+      padding: 8px 15px;
+      border: 1px solid var(--light);
+      background-color: var(--medium);
+      color: var(--light);
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    .mobile-nav-header button.active {
+      background-color: var(--green);
+      color: var(--dark);
+    }
+
+    .panel-wrapper {
+      width: 200vw; /* Two panels side-by-side */
+      transition: transform 0.3s ease-in-out; /* Smooth sliding transition */
+    }
+
+    .panel-wrapper.show-wordlist {
+      transform: translateX(0%);
+    }
+
+    .panel-wrapper.show-hexgrid {
+      transform: translateX(-50%); /* Slide left to show hexgrid */
+    }
+
+    .left-panel,
     .center-panel {
-      flex: auto; /* Allow it to take natural height */
-      justify-content: center; /* Center the grid on mobile */
+      flex-shrink: 0; /* Prevent shrinking during transition */
+      width: 100vw; /* Each panel takes half the wrapper width */
+      box-sizing: border-box; /* Include padding in width calculation */
     }
-
     .word-list ul {
-      grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); /* Make columns flexible */
-      gap: 5px; /* Reduce gap */
+      grid-template-columns: repeat(2, 20ch);
     }
-
     .word-list li {
-      width: auto; /* Allow width to be determined by grid */
-      font-size: 0.8em; /* Slightly smaller font */
+      
     }
-
-    .controls {
-      text-align: center; /* Center controls */
+    .right-panel {
+      display: none; /* Hide right panel on mobile */
     }
   }
 
