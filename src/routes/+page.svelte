@@ -2,6 +2,7 @@
   import { SvelteSet } from 'svelte/reactivity';
   import HexGrid from '$lib/HexGrid.svelte';
   import { placeWords, type HexGridData, type WordPlacementData } from '$lib/wordPlacement';
+  import { swipe } from '$lib/swipe';
 
   import { getWordLists} from "$lib/words/index";
   
@@ -56,7 +57,7 @@
     <button class:active={activePanel === 'hexgrid'} onclick={showHexGrid}>Puzzle</button>
   </div>
 
-  <div class="panel-wrapper">
+  <div class="panel-wrapper" use:swipe onswipeleft={showHexGrid} onswiperight={showWordList}>
     <div class="panel-track" class:show-wordlist={activePanel === 'wordlist'} class:show-hexgrid={activePanel === 'hexgrid'}>
       <div class="left-panel">
         <div class="word-list">

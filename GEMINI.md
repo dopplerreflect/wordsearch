@@ -1,4 +1,5 @@
 ## Gemini Workflow Instructions
+Assume that the user has already started the dev server using npm run dev. Do not attempt to start a dev server using npm run dev.
 
 When making changes in this project, please follow the Jujutsu-based workflow described below.
 
