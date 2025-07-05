@@ -1,7 +1,7 @@
 <script lang="ts">
   import { SvelteSet } from 'svelte/reactivity';
   import HexGrid from '$lib/HexGrid.svelte';
-  import { placeWords, type HexGridData, type WordPlacementData } from '$lib/wordPlacement';
+  import { placeWords } from '$lib/wordPlacement';
   import { swipe } from '$lib/swipe';
 
   import { getWordLists} from "$lib/words/index";
@@ -14,6 +14,7 @@
 
   const cols = 15;
   const rows = 20;
+
   let { hexGridData, wordPlacementData } = $derived(placeWords(currentWords, rows, cols));
 
   let hoveredWord: string | null = $state(null);
