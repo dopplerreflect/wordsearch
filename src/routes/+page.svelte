@@ -152,6 +152,40 @@
     color: var(--light);
     padding: 0.25em 1em;
   }
+
+  /* Responsive adjustments for smaller screens */
+  @media (max-width: 768px) {
+    .container {
+      flex-direction: column; /* Stack panels vertically */
+      padding: 10px; /* Reduce padding */
+    }
+
+    .left-panel {
+      padding-right: 0; /* Remove right padding */
+      padding-bottom: 20px; /* Add some bottom padding */
+      flex: auto; /* Allow it to take natural height */
+    }
+
+    .center-panel {
+      flex: auto; /* Allow it to take natural height */
+      justify-content: center; /* Center the grid on mobile */
+    }
+
+    .word-list ul {
+      grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); /* Make columns flexible */
+      gap: 5px; /* Reduce gap */
+    }
+
+    .word-list li {
+      width: auto; /* Allow width to be determined by grid */
+      font-size: 0.8em; /* Slightly smaller font */
+    }
+
+    .controls {
+      text-align: center; /* Center controls */
+    }
+  }
+
   @media print {
     .container {
       display: block;
