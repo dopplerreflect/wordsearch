@@ -2,21 +2,12 @@
   import { SvelteSet } from 'svelte/reactivity';
   import HexGrid from '$lib/HexGrid.svelte';
   import { placeWords } from '$lib/wordPlacement';
+  import { getWordLists, shuffle } from '$lib/words';
   import { swipe } from '$lib/swipe';
 
-  import { getWordLists} from "$lib/words/index";
-  
   const wordLists = getWordLists();
   
-  let selectedWordList = $state(wordLists[0].name);
-
-  function shuffle(array: any[]) {
-    for (let i = array.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [array[i], array[j]] = [array[j], array[i]];
-    }
-    return array;
-  }
+  let selectedWordList = $derived(wordLists[Math.floor(Math.random() * wordLists.length)].name);
 
   let currentWords = $derived(shuffle(wordLists.find((wordList) => wordList.name === selectedWordList)?.words || []).slice(0, 24));
 
@@ -290,9 +281,7 @@
       width: auto;
       display: block;
     }
-    .center-panel svg {
-      height: 50%;
-    }
+
     .controls {
       display: none;
     }
