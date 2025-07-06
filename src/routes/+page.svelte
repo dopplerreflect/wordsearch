@@ -247,7 +247,6 @@
 
   @media print {
     .container {
-      border: 1px solid black;
       display: block;
       width: 7.0in; 
       margin: 0.75in; 
