@@ -141,4 +141,8 @@
     font-weight: bold;
     cursor: pointer;
   }
+  svg text:focus {
+    outline: none;
+    border: none;
+  }
 </style>
