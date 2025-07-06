@@ -138,7 +138,7 @@
   }
 
   .word-list h2 {
-    color: var(--light);
+    color: var(--dark);
     text-align: center;
   }
 
@@ -151,9 +151,9 @@
   }
 
   .word-list li {
-    background-color: var(--medium);
+    background-color: var(--light);
     width: 20ch;
-    border: 1px solid var(--light);
+    border: 1px solid var(--medium);
     border-radius: 0.25em;
     text-align: center;
     font-size: 0.9em;
@@ -166,10 +166,10 @@
   }
 
   select {
-    background-color: var(--medium);
-    border: 1px solid var(--light);
+    background-color: var(--light);
+    border: 1px solid var(--medium);
     border-radius: 0.25em; 
-    color: var(--light);
+    color: var(--dark);
     padding: 0.25em 1em;
   }
 

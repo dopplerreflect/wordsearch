@@ -1,22 +1,6 @@
 <script>
+  import '$lib/app.css'
   let { children } = $props();
 </script>
 
 {@render children()}
-
-<style>
-  :global {
-    :root {
-      --dark: oklch(0 0.1 300);
-      --medium: oklch(0.25 50% 300);
-      --light: oklch(0.95 10% 300);
-      --green: oklch(0.95 100% 150);
-      --blue: oklch(0.75 100% 210);
-    }
-    body {
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-      background-color: var(--dark);
-      color: var(--light);
-    }
-  }
-</style>

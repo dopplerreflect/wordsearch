@@ -111,9 +111,7 @@
     <g>
       <polygon
         points={getPoints(hex)}
-        fill={isFound ? 'var(--green)' : selectedHexes.has(hex) ? 'var(--blue)' : isHighlighted ? 'yellow' : 'var(--light)'}
-        stroke="var(--medium)"
-        stroke-width="1"
+        class={isFound ? 'isFound' : selectedHexes.has(hex) ? 'isSelected' : isHighlighted ? 'isHighlighted' : ''}
       />
       {#if letter}
         <text
@@ -126,7 +124,6 @@
           text-anchor="middle"
           dominant-baseline="middle"
           font-size={Math.floor(hexRadius * 1.25)}
-          fill="var(--dark)"
         >
           {letter}
         </text>
@@ -136,13 +133,35 @@
 </svg>
 
 <style>
-  svg text {
+  text {
     font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
     font-weight: bold;
     cursor: pointer;
+    fill: var(--dark);
   }
-  svg text:focus {
+  polygon {
+    fill: white;
+    stroke: var(--medium);
+    &.isSelected {
+      fill: var(--blue);
+    }
+    &.isFound {
+      fill: var(--green);
+    }
+    &.isHighlighted {
+      fill: yellow;
+    }
+  }
+  text:focus {
     outline: none;
     border: none;
+  }
+  @media print {
+    polygon.isSelected, polygon.isFound, polygon.isHighlighted {
+      fill: white;
+    }
+    text {
+      fill: black;
+    }
   }
 </style>
