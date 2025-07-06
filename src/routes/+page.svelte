@@ -191,15 +191,14 @@
       gap: 10px;
       position: sticky; /* Keep header at the top */
       top: 0;
-      background-color: var(--dark); /* Ensure header is visible */
       z-index: 100; /* Ensure header is above other content */
     }
 
     .mobile-nav-header button {
       padding: 8px 15px;
-      border: 1px solid var(--light);
+      border: 1px solid var(--dark);
       background-color: var(--medium);
-      color: var(--light);
+      color: var(--dark);
       border-radius: 5px;
       cursor: pointer;
       transition: background-color 0.3s ease;
@@ -248,9 +247,6 @@
   @media print {
     @page {
       margin: 0;
-    }
-    body {
-      width: 8.5in;
     }
     .container {
       display: block;
