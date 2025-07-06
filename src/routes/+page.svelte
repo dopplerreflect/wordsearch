@@ -246,11 +246,16 @@
   }
 
   @media print {
+    @page {
+      margin: 0;
+    }
+    body {
+      width: 8.5in;
+    }
     .container {
       display: block;
       width: 7.0in; 
-      margin: 0.75in; 
-      padding: 0;
+      margin: 0.75in;
       box-sizing: border-box;
     }
 
@@ -286,7 +291,10 @@
     }
 
     .word-list {
+      width: 7in;
       padding: 0;
+      text-align: center;
+      margin-bottom: 1em;
     }
 
     .word-list h2 {
@@ -299,21 +307,20 @@
     }
 
     .word-list ul {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 5px;
+      display: inline;
+      list-style: none;
+      padding-left: 0;
+      margin-left: 0;
     }
 
     .word-list li {
-      width: auto;
       display: inline;
-      background-color: transparent;
       border: none;
-      padding: 0px 5px;
-      font-size: 0.8rem;
+      padding-right: 1em;
     }
-
+    ul li:not(:last-child)::after {
+      content: " ";
+    }
     select {
       display: none;
     }
