@@ -149,7 +149,7 @@
       fill: var(--green);
     }
     &.isHighlighted {
-      fill: yellow;
+      fill: var(--yellow);
     }
   }
   text:focus {
